@@ -1,0 +1,28 @@
+# This file is managed by Ansible and local changes
+# may be overwritten
+
+[Unit]
+Description=Daemon for pool
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=on-failure
+StartLimitInterval=20
+StartLimitBurst=5
+TimeoutStartSec=0
+Environment="HOME=/root"
+ExecStartPre=-/usr/bin/docker kill pool
+ExecStartPre=-/usr/bin/docker rm pool
+ExecStart=/usr/bin/docker run \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -p 0.0.0.0:80:80 \
+        --env MAX_CONTAINERS={{ max_containers }} \
+        --env PREVIEW_REPOSITORY_URL={{ preview_repository_url }} \
+        --env POOL_BASE_DOMAIN={{ pool_base_domain }} \
+        --name pool \
+        pool-server
+ExecStop=-/usr/bin/docker stop pool
+
+[Install]
+WantedBy=multi-user.target
