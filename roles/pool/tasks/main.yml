@@ -4,14 +4,27 @@
 - name: install the latest version of Git
   yum: name=git state=latest
 
+- name: install the latest version of EPEL
+  yum: name=epel-release state=latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+
 - name: install the latest version of Docker
   yum: name=docker state=latest
+  when: ansible_distribution != "CentOS" or ansible_distribution_major_version == "7"
+
+- name: install the latest version of Docker
+  yum: name=docker-io state=latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
 
 - name: activate the service of Docker
   service: name=docker state=started enabled=yes
 
 - name: clone the latest version of Pool
   git: repo=https://github.com/mookjp/pool.git dest=/tmp/pool
+
+- name: install the latest version of Python Setup Tools
+  yum: name=python-setuptools state=latest
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
 
 - name: install the latest version of pip
   easy_install: name=pip
@@ -36,7 +49,12 @@
       POOL_BASE_DOMAIN: "{{ pool_base_domain }}"
 
 - name: install the init script of Pool container
+  template: src=docker-pool dest=/etc/init.d/docker-pool
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+
+- name: install the init script of Pool container
   template: src=docker-pool.service dest=/etc/systemd/system/docker-pool.service
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
 - name: enable the service of Pool container
   service: name=docker-pool enabled=yes
