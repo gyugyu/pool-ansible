@@ -50,7 +50,7 @@
 
 - name: install the init script of Pool container
   template: src=docker-pool dest=/etc/init.d/docker-pool
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+  when: (ansible_os_family == "RedHat" and ansible_distribution_major_version == "6") or ansible_distribution == "Amazon"
 
 - name: install the init script of Pool container
   template: src=docker-pool.service dest=/etc/systemd/system/docker-pool.service
