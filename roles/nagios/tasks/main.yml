@@ -32,10 +32,13 @@
   template: src=contacts.cfg dest=/etc/nagios/objects/contacts.cfg
 
 - name: enable the service of Nagios
-  service: name=nagios enabled=yes
+  service: name=nagios state=started enabled=yes
 
 - name: copy the config of Httpd
   copy: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
 
+- name: copy the password of Nagios
+  template: src=passwd dest=/etc/nagios/passwd
+
 - name: enable the service of Httpd
-  service: name=httpd enabled=yes
+  service: name=httpd state=started enabled=yes
