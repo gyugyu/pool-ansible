@@ -24,4 +24,4 @@ fi
 
 
 #request for posting to a channel
-curl -X POST --data "payload={\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_BOTNAME}\", \"icon_emoji\": \":vertical_traffic_light:\", \"text\": \"${ICON_EMOJI} HOST: ${NAGIOS_HOSTNAME}   SERVICE: ${NAGIOS_SERVICEDISPLAYNAME} STATE: ${NAGIOS_SERVICESTATE} MESSAGE: ${NAGIOS_SERVICEOUTPUT} <http://${WEBHOST_NAGIOS}/cgi-bin/nagios3/extinfo.cgi?host=${NAGIOS_HOSTNAME}|See Nagios>\"}" ${WEBHOOK_URL}
+curl -X POST --data "payload={\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_BOTNAME}\", \"icon_emoji\": \":vertical_traffic_light:\", \"text\": \"${ICON_EMOJI} HOST: ${NAGIOS_HOSTNAME}   SERVICE: ${NAGIOS_SERVICEDISPLAYNAME} STATE: ${NAGIOS_SERVICESTATE} MESSAGE: ${NAGIOS_SERVICEOUTPUT} <!channel> <http://${WEBHOST_NAGIOS}/cgi-bin/nagios3/extinfo.cgi?host=${NAGIOS_HOSTNAME}|See Nagios>\"}" ${WEBHOOK_URL}

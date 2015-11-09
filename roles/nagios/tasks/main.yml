@@ -17,7 +17,7 @@
   command: chmod +x /usr/lib64/nagios/plugins/check_mem
 
 - name: copy the nagios base config
-  copy: src=nagios.cfg dest=/etc/nagios/nagios.cfg
+  template: src=nagios.cfg dest=/etc/nagios/nagios.cfg
 
 - name: copy the commands config
   copy: src=commands.cfg dest=/etc/nagios/objects/commands.cfg
