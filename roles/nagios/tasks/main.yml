@@ -1,0 +1,41 @@
+- name: install the latest version of Nagios
+  yum: name=nagios state=latest
+
+- name: install the latest version of Nagios Plugin
+  yum: name=nagios-plugins state=latest
+
+- name: install all of the latest version of Nagios Plugins
+  yum: name=nagios-plugins-all state=latest
+
+- name: install the Slack notification
+  template: src=slack_nagios dest=/usr/local/bin/slack_nagios mode=0755
+
+- name: install memory check plugin
+  command: curl https://raw.githubusercontent.com/justintime/nagios-plugins/master/check_mem/check_mem.pl -o check_mem chdir=/usr/lib64/nagios/plugins creates=/usr/lib64/nagios/plugins/check_mem
+
+- name: change memory check plugin runnable
+  command: chmod +x /usr/lib64/nagios/plugins/check_mem
+
+- name: copy the nagios base config
+  copy: src=nagios.cfg dest=/etc/nagios/nagios.cfg
+
+- name: copy the commands config
+  copy: src=commands.cfg dest=/etc/nagios/objects/commands.cfg
+
+- name: copy the templates config
+  copy: src=templates.cfg dest=/etc/nagios/objects/templates.cfg
+
+- name: copy the localhost config
+  copy: src=localhost.cfg dest=/etc/nagios/objects/localhost.cfg
+
+- name: copy the contacts config
+  template: src=contacts.cfg dest=/etc/nagios/objects/contacts.cfg
+
+- name: enable the service of Nagios
+  service: name=nagios enabled=yes
+
+- name: copy the config of Httpd
+  copy: src=httpd.conf dest=/etc/httpd/conf/httpd.conf
+
+- name: enable the service of Httpd
+  service: name=httpd enabled=yes

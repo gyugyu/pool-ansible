@@ -1,0 +1,27 @@
+#!/bin/bash
+
+WEBHOST_NAGIOS="{{ pool_base_domain }}"
+SLACK_CHANNEL="#{{ slack_channel }}"
+SLACK_BOTNAME="Nagios Alert"
+WEBHOOK_URL="{{ slack_webhook_url }}" #Get it from Slack Incoming WebHooks setup instruction
+
+#Set the message icon based on Nagios service state
+if [ "$NAGIOS_SERVICESTATE" = "OK" ]
+then
+    ICON_EMOJI=":thumbsup:"
+elif [ "$NAGIOS_SERVICESTATE" = "WARNING" ]
+then
+    ICON_EMOJI=":loudspeaker:"
+elif [ "$NAGIOS_SERVICESTATE" = "CRITICAL" ]
+then
+    ICON_EMOJI=":broken_heart:"
+elif [ "$NAGIOS_SERVICESTATE" = "UNKNOWN" ]
+then
+    ICON_EMOJI=":troll:"
+else
+    ICON_EMOJI=":octocat:"
+fi
+
+
+#request for posting to a channel
+curl -X POST --data "payload={\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_BOTNAME}\", \"icon_emoji\": \":vertical_traffic_light:\", \"text\": \"${ICON_EMOJI} HOST: ${NAGIOS_HOSTNAME}   SERVICE: ${NAGIOS_SERVICEDISPLAYNAME} STATE: ${NAGIOS_SERVICESTATE} MESSAGE: ${NAGIOS_SERVICEOUTPUT} <http://${WEBHOST_NAGIOS}/cgi-bin/nagios3/extinfo.cgi?host=${NAGIOS_HOSTNAME}|See Nagios>\"}" ${WEBHOOK_URL}

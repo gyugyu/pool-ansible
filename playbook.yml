@@ -4,3 +4,4 @@
     - conf.yml
   roles:
     - pool
+    - nagios
